@@ -290,7 +290,7 @@ export const Headers: TableFeature = {
 
         const headerGroups = buildHeaderGroups(
           allColumns,
-          [...rightColumns, ...centerColumns, ...leftColumns],
+          [...leftColumns, ...centerColumns, ...rightColumns,],
           table
         )
 
