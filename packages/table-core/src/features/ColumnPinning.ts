@@ -179,27 +179,27 @@ export const ColumnPinning: TableFeature = {
       table.setColumnPinning(old => {
         if (position === 'right') {
           return {
-            left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
             right: [
               ...(old?.right ?? []).filter(d => !columnIds?.includes(d)),
               ...columnIds,
             ],
+            left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
           }
         }
 
         if (position === 'left') {
           return {
+            right: (old?.right ?? []).filter(d => !columnIds?.includes(d)),
             left: [
               ...(old?.left ?? []).filter(d => !columnIds?.includes(d)),
               ...columnIds,
             ],
-            right: (old?.right ?? []).filter(d => !columnIds?.includes(d)),
           }
         }
 
         return {
-          left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
           right: (old?.right ?? []).filter(d => !columnIds?.includes(d)),
+          left: (old?.left ?? []).filter(d => !columnIds?.includes(d)),
         }
       })
     }
@@ -247,7 +247,7 @@ export const ColumnPinning: TableFeature = {
         table.getState().columnPinning.right,
       ],
       (allCells, left, right) => {
-        const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
+        const leftAndRight: string[] = [...(right ?? []), ...(left ?? [])]
 
         return allCells.filter(d => !leftAndRight.includes(d.column.id))
       },
@@ -326,7 +326,7 @@ export const ColumnPinning: TableFeature = {
         table.getState().columnPinning.right,
       ],
       (allColumns, left, right) => {
-        const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
+        const leftAndRight: string[] = [...(right ?? []), ...(left ?? [])]
 
         return allColumns.filter(d => !leftAndRight.includes(d.id))
       },

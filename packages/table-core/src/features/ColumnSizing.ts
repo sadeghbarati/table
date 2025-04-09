@@ -271,30 +271,63 @@ export const ColumnSizing: TableFeature = {
     }
 
     column.getStart = memo(
-      position => [
-        position,
-        _getVisibleLeafColumns(table, position),
-        table.getState().columnSizing,
-      ],
-      (position, columns) =>
-        columns
+      (position) => {
+        console.log('beforeGetStart ======', {
+          position,
+          _getVisibleLeafColumns: _getVisibleLeafColumns(table, position),
+          getState: table.getState().columnSizing,
+        })
+
+        return [
+          position,
+          _getVisibleLeafColumns(table, position),
+          table.getState().columnSizing,
+        ];
+      },
+      (position, columns) => {
+        console.log('getStart ========', {
+          position,
+          columns,
+          columnsQ: columns
           .slice(0, column.getIndex(position))
-          .reduce((sum, column) => sum + column.getSize(), 0),
+        })
+
+        return columns
+          .slice(0, column.getIndex(position))
+          .reduce((sum, column) => sum + column.getSize(), 0);
+      },
       getMemoOptions(table.options, 'debugColumns', 'getStart')
-    )
+    );
 
     column.getAfter = memo(
-      position => [
-        position,
-        _getVisibleLeafColumns(table, position),
-        table.getState().columnSizing,
-      ],
-      (position, columns) =>
-        columns
+      (position) => {
+
+        console.log('beforeGetAfter =======', {
+          position,
+          _getVisibleLeafColumns: _getVisibleLeafColumns(table, position),
+          getState: table.getState().columnSizing,
+        })
+
+        return [
+          position,
+          _getVisibleLeafColumns(table, position),
+          table.getState().columnSizing,
+        ];
+      },
+      (position, columns) => {
+        console.log('getAfter =======', {
+          position,
+          columns,
+          columnsQ: columns
+          .slice(0, column.getIndex(position))
+        })
+
+        return columns
           .slice(column.getIndex(position) + 1)
-          .reduce((sum, column) => sum + column.getSize(), 0),
+          .reduce((sum, column) => sum + column.getSize(), 0);
+      },
       getMemoOptions(table.options, 'debugColumns', 'getAfter')
-    )
+    );
 
     column.resetSize = () => {
       table.setColumnSizing(({ [column.id]: _, ...rest }) => {

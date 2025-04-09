@@ -29,8 +29,8 @@ const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
       : isFirstRightPinnedColumn
         ? '4px 0 4px -4px gray inset'
         : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    left: isPinned === 'left' ? `${column.getAfter('left')}px` : undefined,
+    right: isPinned === 'right' ? `${column.getStart('right')}px` : undefined,
     opacity: isPinned ? 0.95 : 1,
     position: isPinned ? 'sticky' : 'relative',
     width: column.getSize(),
@@ -187,7 +187,7 @@ function App() {
                                 header.column.pin('left')
                               }}
                             >
-                              {'<='}
+                              Left
                             </button>
                           ) : null}
                           {header.column.getIsPinned() ? (
@@ -207,7 +207,7 @@ function App() {
                                 header.column.pin('right')
                               }}
                             >
-                              {'=>'}
+                              Right
                             </button>
                           ) : null}
                         </div>
