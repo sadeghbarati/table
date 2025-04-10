@@ -21,8 +21,8 @@ import type {
 
 export function getDefaultColumnPinningState(): ColumnPinningState {
   return structuredClone({
-    left: [],
-    right: [],
+    start: [],
+    end: [],
   })
 }
 
@@ -42,26 +42,26 @@ export function column_pin<
     .filter(Boolean)
 
   table_setColumnPinning(column._table, (old) => {
-    if (position === 'right') {
+    if (position === 'end') {
       return {
-        left: old.left.filter((d) => !columnIds.includes(d)),
-        right: [
-          ...old.right.filter((d) => !columnIds.includes(d)),
+        end: [
+          ...old.end.filter((d) => !columnIds.includes(d)),
           ...columnIds,
         ],
+        start: old.start.filter((d) => !columnIds.includes(d)),
       }
     }
 
-    if (position === 'left') {
+    if (position === 'start') {
       return {
-        left: [...old.left.filter((d) => !columnIds.includes(d)), ...columnIds],
-        right: old.right.filter((d) => !columnIds.includes(d)),
+        start: [...old.start.filter((d) => !columnIds.includes(d)), ...columnIds],
+        end: old.end.filter((d) => !columnIds.includes(d)),
       }
     }
 
     return {
-      left: old.left.filter((d) => !columnIds.includes(d)),
-      right: old.right.filter((d) => !columnIds.includes(d)),
+      start: old.start.filter((d) => !columnIds.includes(d)),
+      end: old.end.filter((d) => !columnIds.includes(d)),
     }
   })
 }
@@ -91,13 +91,13 @@ export function column_getIsPinned<
 ): ColumnPinningPosition | false {
   const leafColumnIds = column.getLeafColumns().map((d) => d.id)
 
-  const { left, right } =
+  const { start, end } =
     column._table.options.state?.columnPinning ?? getDefaultColumnPinningState()
 
-  const isLeft = leafColumnIds.some((d) => left.includes(d))
-  const isRight = leafColumnIds.some((d) => right.includes(d))
+  const isStart = leafColumnIds.some((d) => start.includes(d))
+  const isEnd = leafColumnIds.some((d) => end.includes(d))
 
-  return isLeft ? 'left' : isRight ? 'right' : false
+  return isStart ? 'start' : isEnd ? 'end' : false
 }
 
 export function column_getPinnedIndex<
@@ -125,10 +125,10 @@ export function row_getCenterVisibleCells<
     'getAllVisibleCells',
     row_getAllVisibleCells,
   )
-  const { left, right } =
+  const { start, end } =
     row._table.options.state?.columnPinning ?? getDefaultColumnPinningState()
-  const leftAndRight: Array<string> = [...left, ...right]
-  return allCells.filter((d) => !leftAndRight.includes(d.column.id))
+  const startAndEnd: Array<string> = [...start, ...end]
+  return allCells.filter((d) => !startAndEnd.includes(d.column.id))
 }
 
 export function row_getLeftVisibleCells<
@@ -140,12 +140,12 @@ export function row_getLeftVisibleCells<
     'getAllVisibleCells',
     row_getAllVisibleCells,
   )
-  const { left } =
+  const { start } =
     row._table.options.state?.columnPinning ?? getDefaultColumnPinningState()
-  const cells = left
+  const cells = start
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
-    .map((d) => ({ ...d, position: 'left' }))
+    .map((d) => ({ ...d, position: 'start' }))
   return cells as any
 }
 
@@ -158,12 +158,12 @@ export function row_getRightVisibleCells<
     'getAllVisibleCells',
     row_getAllVisibleCells,
   )
-  const { right } =
+  const { end } =
     row._table.options.state?.columnPinning ?? getDefaultColumnPinningState()
-  const cells = right
+  const cells = end
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
-    .map((d) => ({ ...d, position: 'right' }))
+    .map((d) => ({ ...d, position: 'end' }))
   return cells as any
 }
 
@@ -198,7 +198,7 @@ export function table_getIsSomeColumnsPinned<
   const pinningState = table.options.state?.columnPinning
 
   if (!position) {
-    return Boolean(pinningState?.left.length || pinningState?.right.length)
+    return Boolean(pinningState?.start.length || pinningState?.end.length)
   }
   return Boolean(pinningState?.[position].length)
 }
@@ -215,10 +215,10 @@ export function table_getLeftHeaderGroups<
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
   ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
-  const { left } =
+  const { start } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
 
-  const orderedLeafColumns = left
+  const orderedLeafColumns = start
     .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
     .filter(Boolean)
 
@@ -235,10 +235,10 @@ export function table_getRightHeaderGroups<
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
   ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
-  const { right } =
+  const { end } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
 
-  const orderedLeafColumns = right
+  const orderedLeafColumns = end
     .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
     .filter(Boolean)
 
@@ -257,12 +257,12 @@ export function table_getCenterHeaderGroups<
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
   ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
-  const { left, right } =
+  const { start, end } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
-  const leftAndRight: Array<string> = [...left, ...right]
+  const startAndEnd: Array<string> = [...start, ...end]
 
   leafColumns = leafColumns.filter(
-    (column) => !leftAndRight.includes(column.id),
+    (column) => !startAndEnd.includes(column.id),
   )
   return buildHeaderGroups(allColumns, leafColumns, table, 'center')
 }
@@ -396,9 +396,9 @@ export function table_getLeftLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { left } =
+  const { start } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
-  return left
+  return start
     .map(
       (columnId) =>
         table.getAllLeafColumns().find((column) => column.id === columnId)!,
@@ -410,9 +410,9 @@ export function table_getRightLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { right } =
+  const { end } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
-  return right
+  return end
     .map(
       (columnId) =>
         table.getAllLeafColumns().find((column) => column.id === columnId)!,
@@ -424,10 +424,10 @@ export function table_getCenterLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { left, right } =
+  const { start, end } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
-  const leftAndRight: Array<string> = [...left, ...right]
-  return table.getAllLeafColumns().filter((d) => !leftAndRight.includes(d.id))
+  const startAndEnd: Array<string> = [...start, ...end]
+  return table.getAllLeafColumns().filter((d) => !startAndEnd.includes(d.id))
 }
 
 export function table_getPinnedLeafColumns<
@@ -439,13 +439,13 @@ export function table_getPinnedLeafColumns<
 ) {
   return !position
     ? table.getAllLeafColumns()
-    : position === 'left'
+    : position === 'start'
       ? callMemoOrStaticFn(
           table,
           'getLeftLeafColumns',
           table_getLeftLeafColumns,
         )
-      : position === 'right'
+      : position === 'end'
         ? callMemoOrStaticFn(
             table,
             'getRightLeafColumns',
@@ -512,13 +512,13 @@ export function table_getPinnedVisibleLeafColumns<
         'getVisibleLeafColumns',
         table_getVisibleLeafColumns,
       )
-    : position === 'left'
+    : position === 'start'
       ? callMemoOrStaticFn(
           table,
           'getLeftVisibleLeafColumns',
           table_getLeftVisibleLeafColumns,
         )
-      : position === 'right'
+      : position === 'end'
         ? callMemoOrStaticFn(
             table,
             'getRightVisibleLeafColumns',

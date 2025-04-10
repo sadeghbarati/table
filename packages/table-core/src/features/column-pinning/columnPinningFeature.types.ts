@@ -5,11 +5,11 @@ import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Column } from '../../types/Column'
 
-export type ColumnPinningPosition = false | 'left' | 'right'
+export type ColumnPinningPosition = false | 'start' | 'end'
 
 export interface ColumnPinningState {
-  left: Array<string>
-  right: Array<string>
+  start: Array<string>
+  end: Array<string>
 }
 
 export interface TableState_ColumnPinning {

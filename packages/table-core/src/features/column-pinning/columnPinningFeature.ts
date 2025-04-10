@@ -111,7 +111,7 @@ export function constructColumnPinningFeature<
           fnName: 'row_getLeftVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
-            row._table.options.state?.columnPinning?.left,
+            row._table.options.state?.columnPinning?.start,
             row._table.options.state?.columnVisibility,
           ],
         },
@@ -120,7 +120,7 @@ export function constructColumnPinningFeature<
           fnName: 'row_getRightVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
-            row._table.options.state?.columnPinning?.right,
+            row._table.options.state?.columnPinning?.end,
             row._table.options.state?.columnVisibility,
           ],
         },
@@ -152,7 +152,7 @@ export function constructColumnPinningFeature<
               'getVisibleLeafColumns',
               table_getVisibleLeafColumns,
             ),
-            table.options.state?.columnPinning?.left,
+            table.options.state?.columnPinning?.start,
           ],
         },
         {
@@ -178,7 +178,7 @@ export function constructColumnPinningFeature<
               'getVisibleLeafColumns',
               table_getVisibleLeafColumns,
             ),
-            table.options.state?.columnPinning?.right,
+            table.options.state?.columnPinning?.end,
           ],
         },
         // footer groups

@@ -49,7 +49,7 @@ export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { left, right } =
+  const { start, end } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
   const leafColumns = callMemoOrStaticFn(
@@ -58,16 +58,16 @@ export function table_getHeaderGroups<
     table_getVisibleLeafColumns,
   ) as unknown as Array<Column<TFeatures, TData, unknown>>
 
-  const leftColumns = left
+  const leftColumns = start
     .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
     .filter(Boolean)
 
-  const rightColumns = right
+  const rightColumns = end
     .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
     .filter(Boolean)
 
   const centerColumns = leafColumns.filter(
-    (column) => !left.includes(column.id) && !right.includes(column.id),
+    (column) => !start.includes(column.id) && !end.includes(column.id),
   )
 
   const headerGroups = buildHeaderGroups(
