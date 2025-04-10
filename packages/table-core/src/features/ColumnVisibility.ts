@@ -311,7 +311,7 @@ export function _getVisibleLeafColumns<TData extends RowData>(
     ? table.getVisibleLeafColumns()
     : position === 'center'
       ? table.getCenterVisibleLeafColumns()
-      : position === 'left'
+      : position === 'start'
         ? table.getLeftVisibleLeafColumns()
         : table.getRightVisibleLeafColumns()
 }

@@ -270,8 +270,8 @@ export const Headers: TableFeature = {
       () => [
         table.getAllColumns(),
         table.getVisibleLeafColumns(),
-        table.getState().columnPinning.left,
-        table.getState().columnPinning.right,
+        table.getState().columnPinning.start,
+        table.getState().columnPinning.end,
       ],
       (allColumns, leafColumns, left, right) => {
         const leftColumns =
@@ -303,8 +303,8 @@ export const Headers: TableFeature = {
       () => [
         table.getAllColumns(),
         table.getVisibleLeafColumns(),
-        table.getState().columnPinning.left,
-        table.getState().columnPinning.right,
+        table.getState().columnPinning.start,
+        table.getState().columnPinning.end,
       ],
       (allColumns, leafColumns, left, right) => {
         leafColumns = leafColumns.filter(
@@ -319,7 +319,7 @@ export const Headers: TableFeature = {
       () => [
         table.getAllColumns(),
         table.getVisibleLeafColumns(),
-        table.getState().columnPinning.left,
+        table.getState().columnPinning.start,
       ],
       (allColumns, leafColumns, left) => {
         const orderedLeafColumns =
@@ -336,7 +336,7 @@ export const Headers: TableFeature = {
       () => [
         table.getAllColumns(),
         table.getVisibleLeafColumns(),
-        table.getState().columnPinning.right,
+        table.getState().columnPinning.end,
       ],
       (allColumns, leafColumns, right) => {
         const orderedLeafColumns =
